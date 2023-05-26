@@ -10,18 +10,13 @@
             </div>
             <div class="hidden md:block">
               <div class="ml-10 flex items-baseline space-x-4">
-                <router-link
-                  v-for="item in navigation"
-                  :key="item.name"
-                  :to="item.to"
-                  active-class="bg-gray-900 text-white"
-                  :class="[
+                <router-link v-for="item in navigation" :key="item.name" :to="item.to"
+                  active-class="bg-gray-900 text-white" :class="[
                     this.$route.name === item.to.name
                       ? ''
                       : 'text-gray-300 hover:bg-gray-700 hover:text-white',
                     'px-3 py-2 rounded-md text-sm font-medium',
-                  ]"
-                  >{{ item.name }}
+                  ]">{{ item.name }}
                 </router-link>
               </div>
             </div>
@@ -67,18 +62,13 @@
 
       <DisclosurePanel class="md:hidden">
         <div class="space-y-1 px-2 pb-3 pt-2 sm:px-3">
-          <router-link
-            v-for="item in navigation"
-            :key="item.name"
-            :to="item.to"
-            active-class="bg-gray-900 text-white"
+          <router-link v-for="item in navigation" :key="item.name" :to="item.to" active-class="bg-gray-900 text-white"
             :class="[
               this.$route.name === item.to.name
                 ? ''
                 : 'text-gray-300 hover:bg-gray-700 hover:text-white',
               'block px-3 py-2 rounded-md text-base font-medium',
-            ]"
-            >{{ item.name }}
+            ]">{{ item.name }}
           </router-link>
         </div>
         <div class="border-t border-gray-700 pb-3 pt-4">
@@ -104,7 +94,7 @@
   </div>
 </template>
   
-<script>
+<script setup>
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 import { Bars3Icon, XMarkIcon } from '@heroicons/vue/24/outline'
 import { computed } from 'vue';
@@ -116,35 +106,16 @@ const navigation = [
   { name: 'Surveys', to: { name: 'Surveys' }, current: false },
 ]
 
-export default {
-  components: {
-    Disclosure,
-    DisclosureButton,
-    DisclosurePanel,
-    Menu,
-    MenuButton,
-    MenuItem,
-    MenuItems,
-    XMarkIcon,
-    Bars3Icon,
-  },
-  setup() {
-    const store = useStore();
-    const router = useRouter();
+const router = useRouter();
+const store = useStore();
 
-    function logout() {
-      store.dispatch("logout").then(() => {
-        router.push({
-          name: "Login",
-        });
-      });
-    }
+const user = computed(() => store.state.user.data)
 
-    return {
-      user: computed(() => store.state.user.data),
-      navigation,
-      logout,
-    }
-  },
-};
+function logout() {
+  store.dispatch("logout").then(() => {
+    router.push({
+      name: "Login",
+    });
+  });
+}
 </script>
