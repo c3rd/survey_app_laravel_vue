@@ -11,25 +11,34 @@
       <div>
         <label for="name" class="block text-sm font-medium leading-6 text-gray-900">Name</label>
         <div class="mt-2">
-          <input id="name" name="name" type="text" autocomplete="name" required v-model="user.name"
+          <input id="name" name="name" type="text" autocomplete="name" required @input="nameError = ''" v-model="user.name"
             class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+          <ul v-if="nameError" class="px-5">
+            <li v-for="error in nameError" class="text-red-600 text-sm list-disc">{{ error }}</li>
+          </ul>
         </div>
       </div>
 
       <div>
         <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Email address</label>
         <div class="mt-2">
-          <input id="email" name="email" type="email" autocomplete="email" required v-model="user.email"
+          <input id="email" name="email" type="email" autocomplete="email" required @input="emailError = ''" v-model="user.email"
             class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+          <ul v-if="emailError" class="px-5">
+            <li v-for="error in emailError" class="text-red-600 text-sm list-disc">{{ error }}</li>
+          </ul>
         </div>
       </div>
 
       <div>
         <label for="password" class="block text-sm font-medium leading-6 text-gray-900">Password</label>
         <div class="mt-2">
-          <input id="password" name="password" type="password" autocomplete="current_password" required
+          <input id="password" name="password" type="password" @input="passwordError = ''" autocomplete="current_password" required
             v-model="user.password"
             class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+          <ul v-if="passwordError" class="px-5">
+            <li v-for="error in passwordError" class="text-red-600 text-sm list-disc">{{ error }}</li>
+          </ul>
         </div>
       </div>
 
@@ -38,8 +47,11 @@
           Confirmation</label>
         <div class="mt-2">
           <input id="password_confirmation" name="password_confirmation" type="password"
-            autocomplete="current_password_confirmation" required v-model="user.password_confirmation"
+            autocomplete="current_password_confirmation" required @input="passwordError = ''" v-model="user.password_confirmation"
             class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+          <ul v-if="passwordError" class="px-5">
+            <li v-for="error in passwordError" class="text-red-600 text-sm list-disc">{{ error }}</li>
+          </ul>
         </div>
       </div>
 
@@ -63,8 +75,13 @@
 
 import store from '../store';
 import { useRouter } from 'vue-router';
+import { ref } from 'vue';
 
 const router = useRouter();
+
+const nameError = ref('');
+const emailError = ref('');
+const passwordError = ref('');
 
 const user = {
   name: '',
@@ -79,6 +96,11 @@ function register() {
       router.push({
         name: 'Dashboard'
       })
+    })
+    .catch(err => {
+      nameError.value = err.response.data.errors.name ?? null;
+      emailError.value = err.response.data.errors.email ?? null;
+      passwordError.value = err.response.data.errors.password ?? null;
     })
 }
 </script>
